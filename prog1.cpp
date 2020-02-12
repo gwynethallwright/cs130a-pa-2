@@ -1,5 +1,7 @@
 #include <iostream>
 #include <list>
+#include <vector>
+#include <array>
 #include <iterator>
 
 const int table_length = 43;
@@ -12,16 +14,21 @@ int calculate_hash_value(int num){
 	return hash_value;
 }
 
-void insert(int num, std::list <int> ** table){
+void insert(int num, std::vector<std::array<int, 2>> ** table){
 	int hash_value = calculate_hash_value(num);
-	table[hash_value]->push_front(num);
+	static std::array<int, 2> my_array;
+	std::array<int, 2> * my_array_pointer = &my_array;
+	my_array[0] = num;
+	my_array[1] = 1;
+	std::vector<std::array<int, 2>> :: iterator it = table[hash_value]->begin();
+    table[hash_value]->insert(it, my_array);
 }
 
-void find(int num, std::list <int> ** table){
+void find(int num, std::vector<std::array<int, 2>> ** table){
 	int hash_value = calculate_hash_value(num);
-	std::list <int> :: iterator it;
+	std::vector<std::array<int, 2>> :: iterator it;
 	for (it = table[hash_value]->begin(); it != table[hash_value]->end(); ++it){
-		if (*it == num){
+		if ((*it)[0] == num){
 			std::cout << "Found.\n";
 			return;
 		}
@@ -29,20 +36,20 @@ void find(int num, std::list <int> ** table){
 	std::cout << "Not found.\n";
 }
 
-std::list <int> ** create_hash_table(){
-	static std::list <int> * hash_table [table_length];
-	std::list <int> ** hash_table_pointer;
+std::vector<std::array<int, 2>> ** create_hash_table(){
+	static std::vector<std::array<int, 2>> * hash_table [table_length];
+	std::vector<std::array<int, 2>> ** hash_table_pointer;
 	hash_table_pointer = hash_table;
 	for (int i = 0; i < table_length; ++i){
-		static std::list <int> my_list;
-		std::list <int> * my_list_pointer = &my_list;
+		static std::vector<std::array<int, 2>> my_list;
+		std::vector<std::array<int, 2>> * my_list_pointer = &my_list;
 		hash_table[i] = my_list_pointer;
 	}
 	return hash_table_pointer;
 }
 
 int main(int argc, char** argv){
-	std::list <int> ** hash_table_pointer = create_hash_table();
+	std::vector<std::array<int, 2>> ** hash_table_pointer = create_hash_table();
 	insert(300, hash_table_pointer);
 	insert(300+table_length, hash_table_pointer);
 	find(300, hash_table_pointer);
