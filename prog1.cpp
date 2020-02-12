@@ -23,11 +23,10 @@ void find(int num, std::list <int> ** table){
 	for (it = table[hash_value]->begin(); it != table[hash_value]->end(); ++it){
 		if (*it == num){
 			std::cout << "Found.\n";
-		}
-		else{
-			std::cout << "Not found.\n";
+			return;
 		}
 	}
+	std::cout << "Not found.\n";
 }
 
 int main(int argc, char** argv){
@@ -40,6 +39,8 @@ for (int i = 0; i < table_length; ++i){
 	hash_table[i] = my_list_pointer;
 }
 insert(300, hash_table_pointer);
+insert(300+table_length, hash_table_pointer);
 find(300, hash_table_pointer);
+find(300+table_length, hash_table_pointer);
 return 0;
 }
