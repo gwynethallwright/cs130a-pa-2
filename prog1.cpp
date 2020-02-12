@@ -1,10 +1,11 @@
 #include <list>
 
-void insert(int num, int* table){
+void insert(int num, std::list <int> ** table){
 	int hash_value = num%43;
 	if (hash_value < 0){
 		hash_value = hash_value + 43;
 	}
+	table[hash_value]->push_front(num);
 }
 
 int main(int argc, char** argv){
