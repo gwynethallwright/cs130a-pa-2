@@ -29,18 +29,23 @@ void find(int num, std::list <int> ** table){
 	std::cout << "Not found.\n";
 }
 
-int main(int argc, char** argv){
-std::list <int> * hash_table [table_length];
-std::list <int> ** hash_table_pointer;
-hash_table_pointer = hash_table;
-for (int i = 0; i < table_length; ++i){
-	std::list <int> my_list;
-	std::list <int> * my_list_pointer = &my_list;
-	hash_table[i] = my_list_pointer;
+std::list <int> ** create_hash_table(){
+	static std::list <int> * hash_table [table_length];
+	std::list <int> ** hash_table_pointer;
+	hash_table_pointer = hash_table;
+	for (int i = 0; i < table_length; ++i){
+		static std::list <int> my_list;
+		std::list <int> * my_list_pointer = &my_list;
+		hash_table[i] = my_list_pointer;
+	}
+	return hash_table_pointer;
 }
-insert(300, hash_table_pointer);
-insert(300+table_length, hash_table_pointer);
-find(300, hash_table_pointer);
-find(300+table_length, hash_table_pointer);
-return 0;
+
+int main(int argc, char** argv){
+	std::list <int> ** hash_table_pointer = create_hash_table();
+	insert(300, hash_table_pointer);
+	insert(300+table_length, hash_table_pointer);
+	find(300, hash_table_pointer);
+	find(300+table_length, hash_table_pointer);
+	return 0;
 }
