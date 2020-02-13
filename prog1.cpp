@@ -15,7 +15,7 @@ int calculate_hash_value(int num){
 }
 
 auto find(int num, std::vector<std::array<int, 2>> ** table, int suppress_output){
-	struct result {int return_value; std::array<int, 2> * pointer;};
+	struct result {int return_value; std::vector<std::array<int, 2> > :: iterator pointer;};
 	int hash_value = calculate_hash_value(num);
 	std::vector<std::array<int, 2>> :: iterator it;
 	for (it = table[hash_value]->begin(); it != table[hash_value]->end(); ++it){
@@ -23,17 +23,18 @@ auto find(int num, std::vector<std::array<int, 2>> ** table, int suppress_output
 			if (suppress_output == 0){
 				std::cout << "item found, count = " << (*it)[1] << "\n";
 			}
-			return result {1, &(*it)};
+			return result {1, it};
 		}
 	}
 	if (suppress_output == 0){
 		std::cout << "item not found.\n";
 	}
-	return result {0, &(*it)};
+	return result {0, it};
 }
 
 void insert(int num, std::vector<std::array<int, 2>> ** table){
-	auto [found, pointer] = find(num, table, 1);
+	auto [found, iterator] = find(num, table, 1);
+	std::array<int, 2> * pointer = &(*iterator);
 	if (found == 0){
 		int hash_value = calculate_hash_value(num);
 		static std::array<int, 2> my_array;
@@ -47,6 +48,18 @@ void insert(int num, std::vector<std::array<int, 2>> ** table){
 	else {
 		(*pointer)[1] = (*pointer)[1]+1;
 		std::cout << "item already present, count = " << (*pointer)[1] << "\n";
+	}
+}
+
+void delete_item(int num, std::vector<std::array<int, 2>> ** table){
+	auto [found, pointer] = find(num, table, 1);
+	if (found == 1){
+		if ((*pointer)[1] == 1){
+			table[calculate_hash_value(num)]->erase(pointer);
+		}
+		else {
+			(*pointer)[1] = (*pointer)[1]-1;
+		}
 	}
 }
 
@@ -69,5 +82,11 @@ int main(int argc, char** argv){
 	insert(300+table_length, hash_table_pointer);
 	find(300, hash_table_pointer, 0);
 	find(300+table_length, hash_table_pointer, 0);
+	delete_item(300, hash_table_pointer);
+	find(300, hash_table_pointer, 0);
+	delete_item(300, hash_table_pointer);
+	find(300, hash_table_pointer, 0);
+	delete_item(300, hash_table_pointer);
+	find(300, hash_table_pointer, 0);
 	return 0;
 }
