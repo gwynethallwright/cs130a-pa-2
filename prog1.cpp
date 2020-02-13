@@ -21,13 +21,13 @@ auto find(int num, std::vector<std::array<int, 2>> ** table, int suppress_output
 	for (it = table[hash_value]->begin(); it != table[hash_value]->end(); ++it){
 		if ((*it)[0] == num){
 			if (suppress_output == 0){
-				std::cout << "Found.\n";
+				std::cout << "item found, count = " << (*it)[1] << "\n";
 			}
 			return result {1, &(*it)};
 		}
 	}
 	if (suppress_output == 0){
-		std::cout << "Not found.\n";
+		std::cout << "item not found.\n";
 	}
 	return result {0, &(*it)};
 }
@@ -42,11 +42,12 @@ void insert(int num, std::vector<std::array<int, 2>> ** table){
 		my_array[1] = 1;
 		std::vector<std::array<int, 2>> :: iterator it = table[hash_value]->begin();
 	    table[hash_value]->insert(it, my_array);
+	    std::cout << "item successfully inserted, count = 1\n"; 
 	}
 	else {
 		(*pointer)[1] = (*pointer)[1]+1;
+		std::cout << "item already present, count = " << (*pointer)[1] << "\n";
 	}
-
 }
 
 std::vector<std::array<int, 2>> ** create_hash_table(){
@@ -63,6 +64,7 @@ std::vector<std::array<int, 2>> ** create_hash_table(){
 
 int main(int argc, char** argv){
 	std::vector<std::array<int, 2>> ** hash_table_pointer = create_hash_table();
+	insert(300, hash_table_pointer);
 	insert(300, hash_table_pointer);
 	insert(300+table_length, hash_table_pointer);
 	find(300, hash_table_pointer, 0);
