@@ -24,16 +24,18 @@ void insert(int num, std::vector<std::array<int, 2>> ** table){
     table[hash_value]->insert(it, my_array);
 }
 
-void find(int num, std::vector<std::array<int, 2>> ** table){
+auto find(int num, std::vector<std::array<int, 2>> ** table){
+	struct result {int return_value; std::array<int, 2> * pointer;};
 	int hash_value = calculate_hash_value(num);
 	std::vector<std::array<int, 2>> :: iterator it;
 	for (it = table[hash_value]->begin(); it != table[hash_value]->end(); ++it){
 		if ((*it)[0] == num){
 			std::cout << "Found.\n";
-			return;
+			return result {1, &(*it)};
 		}
 	}
 	std::cout << "Not found.\n";
+	return result {0, &(*it)};
 }
 
 std::vector<std::array<int, 2>> ** create_hash_table(){
