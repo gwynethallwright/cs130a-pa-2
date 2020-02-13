@@ -14,16 +14,6 @@ int calculate_hash_value(int num){
 	return hash_value;
 }
 
-void insert(int num, std::vector<std::array<int, 2>> ** table){
-	int hash_value = calculate_hash_value(num);
-	static std::array<int, 2> my_array;
-	std::array<int, 2> * my_array_pointer = &my_array;
-	my_array[0] = num;
-	my_array[1] = 1;
-	std::vector<std::array<int, 2>> :: iterator it = table[hash_value]->begin();
-    table[hash_value]->insert(it, my_array);
-}
-
 auto find(int num, std::vector<std::array<int, 2>> ** table){
 	struct result {int return_value; std::array<int, 2> * pointer;};
 	int hash_value = calculate_hash_value(num);
@@ -36,6 +26,23 @@ auto find(int num, std::vector<std::array<int, 2>> ** table){
 	}
 	std::cout << "Not found.\n";
 	return result {0, &(*it)};
+}
+
+void insert(int num, std::vector<std::array<int, 2>> ** table){
+	auto [found, pointer] = find(num, table);
+	if (found == 0){
+		int hash_value = calculate_hash_value(num);
+		static std::array<int, 2> my_array;
+		std::array<int, 2> * my_array_pointer = &my_array;
+		my_array[0] = num;
+		my_array[1] = 1;
+		std::vector<std::array<int, 2>> :: iterator it = table[hash_value]->begin();
+	    table[hash_value]->insert(it, my_array);
+	}
+	else {
+		(*pointer)[1] = (*pointer)[1]+1;
+	}
+
 }
 
 std::vector<std::array<int, 2>> ** create_hash_table(){
