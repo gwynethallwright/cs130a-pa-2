@@ -18,6 +18,10 @@ int get_right_index(int i){
 	return (2*i+2);
 }
 
+void percolate_up(int i, int * heap_array){
+
+}
+
 void percolate_down(int i, int * heap_array){
 	int left = get_left_index(i);
 	int right = get_right_index(i);
@@ -32,6 +36,7 @@ void percolate_down(int i, int * heap_array){
 		int temp = heap_array[i];
 		heap_array[i] = heap_array[small_index];
 		heap_array[small_index] = i;
+		percolate_down(small_index, heap_array);
 	}
 }
 
