@@ -6,6 +6,35 @@
 
 const int table_length = 43;
 
+int get_parent_index(int i){
+	return (i-1)/2;
+}
+
+int get_left_index(int i){
+	return (2*i+1);
+}
+
+int get_right_index(int i){
+	return (2*i+2);
+}
+
+void percolate_down(int i, int * heap_array){
+	int left = get_left_index(i);
+	int right = get_right_index(i);
+	int small_index = i;
+	if (heap_array[left] < heap_array[i]){
+		small_index = left;
+	}
+	if (heap_array[right] < heap_array[small_index]){
+		small_index = right;
+	}
+	if (small_index != i){
+		int temp = heap_array[i];
+		heap_array[i] = heap_array[small_index];
+		heap_array[small_index] = i;
+	}
+}
+
 int calculate_hash_value(int num){
 	int hash_value = num % table_length;
 	if (hash_value < 0){
