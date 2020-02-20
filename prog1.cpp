@@ -49,6 +49,12 @@ void delete_min(std::vector<int> * heap_array){
 	}
 }
 
+void insert_heap(int to_insert, std::vector<int> * heap_array){
+	heap_array->push_back(to_insert);
+	int new_index = heap_array->size()-1;
+	percolate_up(new_index, heap_array);
+}
+
 int calculate_hash_value(int num){
 	int hash_value = num % table_length;
 	if (hash_value < 0){
