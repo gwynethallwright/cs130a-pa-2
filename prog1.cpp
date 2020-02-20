@@ -19,8 +19,8 @@ int get_right_index(int i){
 }
 
 void percolate_up(int i, std::vector<int> * heap_array){
-	if (heap_array[get_parent_index(i)] > heap_array[i]){
-		swap(heap_array[i], heap_array[get_parent_index(i)]);
+	if (i && (*heap_array)[get_parent_index(i)] < (*heap_array)[i]){
+		std::swap((*heap_array)[i], (*heap_array)[get_parent_index(i)]);
 		percolate_up(get_parent_index(i), heap_array);
 	}
 }
@@ -29,14 +29,14 @@ void percolate_down(int i, std::vector<int> * heap_array){
 	int left = get_left_index(i);
 	int right = get_right_index(i);
 	int small_index = i;
-	if (heap_array[left] < heap_array[i]){
+	if ((*heap_array)[left] < (*heap_array)[i]){
 		small_index = left;
 	}
-	if (heap_array[right] < heap_array[small_index]){
+	if ((*heap_array)[right] < (*heap_array)[small_index]){
 		small_index = right;
 	}
 	if (small_index != i){
-		swap(heap_array[i], heap_array[small_index]);
+		std::swap((*heap_array)[i], (*heap_array)[small_index]);
 		percolate_down(small_index, heap_array);
 	}
 }
@@ -52,6 +52,7 @@ void delete_min(std::vector<int> * heap_array){
 void insert_heap(int to_insert, std::vector<int> * heap_array){
 	heap_array->push_back(to_insert);
 	int new_index = heap_array->size()-1;
+	std::cout << new_index << "\n";
 	percolate_up(new_index, heap_array);
 }
 
@@ -147,6 +148,7 @@ int main(int argc, char** argv){
 	find(300, hash_table_pointer, 0);
 	std::vector<int> heap_array;
 	insert_heap(50, &heap_array);
+	insert_heap(100, &heap_array);
 	print_heap(&heap_array);
 	return 0;
 }
