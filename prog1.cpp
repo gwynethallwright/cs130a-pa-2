@@ -18,16 +18,14 @@ int get_right_index(int i){
 	return (2*i+2);
 }
 
-void percolate_up(int i, int * heap_array){
+void percolate_up(int i, std::vector<int> * heap_array){
 	if (heap_array[get_parent_index(i)] > heap_array[i]){
-		int temp = heap_array[i];
-		heap_array[i] = heap_array[get_parent_index(i)];
-		heap_array[get_parent_index(i)] = temp;
+		swap(heap_array[i], heap_array[get_parent_index(i)]);
 		percolate_up(get_parent_index(i), heap_array);
 	}
 }
 
-void percolate_down(int i, int * heap_array){
+void percolate_down(int i, std::vector<int> * heap_array){
 	int left = get_left_index(i);
 	int right = get_right_index(i);
 	int small_index = i;
@@ -38,10 +36,16 @@ void percolate_down(int i, int * heap_array){
 		small_index = right;
 	}
 	if (small_index != i){
-		int temp = heap_array[i];
-		heap_array[i] = heap_array[small_index];
-		heap_array[small_index] = temp;
+		swap(heap_array[i], heap_array[small_index]);
 		percolate_down(small_index, heap_array);
+	}
+}
+
+void delete_min(std::vector<int> * heap_array){
+	if (heap_array->size() != 0){
+		heap_array->front() = heap_array->back();
+		heap_array->pop_back();
+		percolate_down(0, heap_array);
 	}
 }
 
