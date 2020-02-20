@@ -55,6 +55,14 @@ void insert_heap(int to_insert, std::vector<int> * heap_array){
 	percolate_up(new_index, heap_array);
 }
 
+void print_heap(std::vector<int> * heap_array){
+	std::vector<int>::const_iterator it;
+	for(it = heap_array->begin(); it != heap_array->end(); ++it){
+		std::cout << (*it) << " ";
+    }
+    std::cout << "\n";
+}
+
 int calculate_hash_value(int num){
 	int hash_value = num % table_length;
 	if (hash_value < 0){
@@ -137,5 +145,8 @@ int main(int argc, char** argv){
 	find(300, hash_table_pointer, 0);
 	delete_item(300, hash_table_pointer);
 	find(300, hash_table_pointer, 0);
+	std::vector<int> heap_array;
+	insert_heap(50, &heap_array);
+	print_heap(&heap_array);
 	return 0;
 }
