@@ -19,7 +19,12 @@ int get_right_index(int i){
 }
 
 void percolate_up(int i, int * heap_array){
-
+	if (heap_array[get_parent_index(i)] > heap_array[i]){
+		int temp = heap_array[i];
+		heap_array[i] = heap_array[get_parent_index(i)];
+		heap_array[get_parent_index(i)] = temp;
+		percolate_up(get_parent_index(i), heap_array);
+	}
 }
 
 void percolate_down(int i, int * heap_array){
@@ -35,7 +40,7 @@ void percolate_down(int i, int * heap_array){
 	if (small_index != i){
 		int temp = heap_array[i];
 		heap_array[i] = heap_array[small_index];
-		heap_array[small_index] = i;
+		heap_array[small_index] = temp;
 		percolate_down(small_index, heap_array);
 	}
 }
