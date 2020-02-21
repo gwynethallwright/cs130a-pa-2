@@ -47,6 +47,17 @@ void percolate_down(int i){
 	}
 }
 
+void heapify(int i){
+
+	int parent = get_parent_index(i);
+	if ( i == 0 || ((*(heap_array[parent]))[0] > ((*(heap_array[i]))[0] ))) {
+		percolate_down(i);
+	}
+	else {
+		percolate_up(i);
+	}
+}
+
 int calculate_hash_value(int num){
 	int hash_value = num % table_length;
 	if (hash_value < 0){
@@ -61,14 +72,15 @@ void delete_min(std::list<std::array<int, 3>> ** table){
 			int num = (*(heap_array[0]))[0];
 			int hash = calculate_hash_value(num);
 			table[hash]->erase(heap_array[0]);
+			std::cout << "min item " << (*(heap_array[0]))[0] << " successfully deleted\n";
+			heap_array[0] = heap_array.back();
+			heap_array.pop_back();
+			percolate_down(0);
 		}
 		else {
 			(*(heap_array[0]))[1] = (*(heap_array[0]))[1]-1;
+			std::cout << "min item " << (*(heap_array[0]))[0] << " successfully deleted\n";
 		}
-		std::cout << "min item " << (*(heap_array[0]))[0] << " successfully deleted\n";
-		heap_array[0] = heap_array.back();
-		heap_array.pop_back();
-		percolate_down(0);
 	}
 }
 
@@ -139,11 +151,20 @@ void delete_item(int num, std::list<std::array<int, 3>> ** table){
 	auto [found, pointer] = find(num, table, 1);
 	if (found == 1){
 		if ((*pointer)[1] == 1){
+
+			std::swap(heap_array[(*pointer)[2]], heap_array.back());
+			heap_array.pop_back();
+			heapify((*pointer)[2]);
+
 			table[calculate_hash_value(num)]->erase(pointer);
 		}
 		else {
 			(*pointer)[1] = (*pointer)[1]-1;
 		}
+		std::cout << "item successfully deleted\n";
+	}
+	else {
+		std::cout << "item not present in table\n";
 	}
 }
 
@@ -161,7 +182,7 @@ std::list<std::array<int, 3>> ** create_hash_table(){
 
 int main(int argc, char** argv){
 	static std::list<std::array<int, 3>> ** hash_table_pointer = create_hash_table();
-
+	/*
 	insert(3, hash_table_pointer);
 	print_heap();
 	find(302, hash_table_pointer, 0);
@@ -187,6 +208,10 @@ int main(int argc, char** argv){
 	find(-603, hash_table_pointer, 0);
 	print_heap();
 	delete_item(3, hash_table_pointer);
+	print_heap();
 	find(3, hash_table_pointer, 0);
+	delete_item(3, hash_table_pointer);
+	print_heap();
+	find(3, hash_table_pointer, 0);*/
 	return 0;
 }
