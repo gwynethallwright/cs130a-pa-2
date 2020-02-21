@@ -192,19 +192,25 @@ int main(int argc, char** argv){
     	if (current == "insert"){
     		++i;
     	    argument = argv[i];
-    	    argument.pop_back();
+    	    if (i != (argc-1)){
+    	    	argument.pop_back();
+    	    }
     		insert(std::atoi(argument.c_str()), hash_table_pointer);
     	}
     	else if (current == "lookup"){
     		++i;
     	    argument = argv[i];
-    	    argument.pop_back();
+    	    if (i != (argc-1)){
+    	    	argument.pop_back();
+    	    }
     		find(std::atoi(argument.c_str()), hash_table_pointer, 0);
     	}
     	else if (current == "delete"){
     		++i;
     	    argument = argv[i];
-    	    argument.pop_back();
+    	    if (i != (argc-1)){
+    	    	argument.pop_back();
+    	    }
     		delete_item(std::atoi(argument.c_str()), hash_table_pointer);
     	}
     	else if (current == "print,"){
