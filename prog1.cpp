@@ -99,10 +99,10 @@ void print_heap(){
     }
     std::cout << "\n";
 
-	for(it = heap_array.begin(); it != heap_array.end(); ++it){
+	/*for(it = heap_array.begin(); it != heap_array.end(); ++it){
 		std::cout << (*(*it))[2] << " ";
     }
-    std::cout << "\n";
+    std::cout << "\n";*/
 }
 
 auto find(int num, std::list<std::array<int, 3>> ** table, int suppress_output){
@@ -213,10 +213,10 @@ int main(int argc, char** argv){
     	    }
     		delete_item(std::atoi(argument.c_str()), hash_table_pointer);
     	}
-    	else if (current == "print,"){
+    	else if (current == "print," || current == "print"){
     		print_heap();
     	}
-        else if (current == "deleteMin,"){
+        else if (current == "deleteMin," || current == "deleteMin"){
     		delete_min(hash_table_pointer);
     	}
     	++i;
