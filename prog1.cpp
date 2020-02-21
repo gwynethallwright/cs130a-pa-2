@@ -21,12 +21,13 @@ int get_right_index(int i){
 	return (2*i+2);
 }
 
-int percolate_up(int i){
+void percolate_up(int i){
 	if (i && (*(heap_array[get_parent_index(i)]))[0] > (*heap_array[i])[0]){
 		std::swap(heap_array[i], heap_array[get_parent_index(i)]);
-		return percolate_up(get_parent_index(i));
+		(*heap_array[i])[2] = i;
+		percolate_up(get_parent_index(i));
 	}
-	return i;
+	(*heap_array[i])[2] = i;
 }
 
 void percolate_down(int i){
@@ -41,6 +42,7 @@ void percolate_down(int i){
 	}
 	if (small_index != i){
 		std::swap(heap_array[i], heap_array[small_index]);
+		(*heap_array[i])[2] = i;
 		percolate_down(small_index);
 	}
 }
@@ -70,16 +72,21 @@ void delete_min(std::list<std::array<int, 3>> ** table){
 	}
 }
 
-int insert_heap(std::list<std::array<int, 3>>::iterator to_insert){
+void insert_heap(std::list<std::array<int, 3>>::iterator to_insert){
 	heap_array.push_back(to_insert);
 	int new_index = heap_array.size()-1;
-	return percolate_up(new_index);
+	percolate_up(new_index);
 }
 
 void print_heap(){
 	static std::vector< std::list<std::array<int, 3>>::iterator >::iterator it;
 	for(it = heap_array.begin(); it != heap_array.end(); ++it){
 		std::cout << (*(*it))[0] << " ";
+    }
+    std::cout << "\n";
+
+	for(it = heap_array.begin(); it != heap_array.end(); ++it){
+		std::cout << (*(*it))[2] << " ";
     }
     std::cout << "\n";
 }
@@ -117,7 +124,7 @@ void insert(int num, std::list<std::array<int, 3>> ** table){
 
 		std::list<std::array<int, 3>> :: iterator it_2 = table[hash_value]->begin();
 
-	    (*my_array)[2] = insert_heap(it_2);
+	    insert_heap(it_2);
 
 	    std::cout << "item successfully inserted, count = 1\n"; 
 	}
