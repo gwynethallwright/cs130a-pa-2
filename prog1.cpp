@@ -45,7 +45,7 @@ void percolate_down(int i){
 
 void delete_min(){
 	if (heap_array.size() != 0){
-		heap_array.front() = heap_array.back();
+		heap_array[0] = heap_array.back();
 		heap_array.pop_back();
 		percolate_down(0);
 	}
@@ -97,21 +97,16 @@ void insert(int num, std::vector<std::array<int, 2>> ** table){
 	if (found == 0){
 		int hash_value = calculate_hash_value(num);
 		std::array<int, 2> * my_array = (std::array<int, 2> *) malloc(sizeof(std::array<int, 2>));
-		/*static std::array<int, 2> my_array;*/
-		/*std::array<int, 2> * my_array_pointer = &my_array;*/
 		(*my_array)[0] = num;
 		(*my_array)[1] = 1;
 		std::vector<std::array<int, 2>> :: iterator it = table[hash_value]->begin();
 	    table[hash_value]->insert(it, (*my_array));
 	    insert_heap(my_array);
-	    /*std::array<int, 2> * test = (std::array<int, 2> *) malloc(sizeof(std::array<int, 2>));
-	    (*test)[0] = num;
-		heap_array.push_back(test);*/
 	    std::cout << "item successfully inserted, count = 1\n"; 
 	}
 	else {
 		(*pointer)[1] = (*pointer)[1]+1;
-		/*insert_heap(pointer, heap_array);*/
+		/*insert_heap(pointer);*/
 		std::cout << "item already present, count = " << (*pointer)[1] << "\n";
 	}
 }
@@ -156,17 +151,7 @@ int main(int argc, char** argv){
 	print_heap();
 	insert(-54, hash_table_pointer);
 	print_heap();
-
-	static std::vector<std::array<int, 2> *> heap_array_test;
-	std::array<int, 2> testpointer;
-	testpointer[0] = 0;
-	heap_array_test.push_back(&testpointer);
-	std::array<int, 2> testpointer2;
-	testpointer2[0] = 1;
-	heap_array_test.push_back(&testpointer2);	
-	std::array<int, 2> testpointer3;
-	testpointer3[0] = 2;
-	heap_array_test.push_back(&testpointer3);
+	insert(-600, hash_table_pointer);
 	print_heap();
 	/*find(300, hash_table_pointer, 0);
 	find(300+table_length, hash_table_pointer, 0);
