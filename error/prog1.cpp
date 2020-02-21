@@ -22,7 +22,7 @@ void print_heap(){
 }
 
 int main(int argc, char** argv){
-	std::list<std::array<int, 2> *> tester;
+	static std::vector<std::array<int, 2>::const_iterator> heap_array;
 	insert_into_heap(121);
 	print_heap();
 	insert_into_heap(-500);

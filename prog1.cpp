@@ -4,7 +4,7 @@
 #include <array>
 #include <iterator>
 
-static std::vector<std::array<int, 2> *> heap_array;
+static std::vector<std::array<int, 2>::iterator> heap_array;
 
 const int table_length = 43;
 
@@ -21,7 +21,7 @@ int get_right_index(int i){
 }
 
 void percolate_up(int i){
-	if (i && (*(heap_array[get_parent_index(i)]))[0] > (*(heap_array[i]))[0]){
+	if (i && heap_array[get_parent_index(i)][0] > heap_array[i][0]){
 		std::swap(heap_array[i], heap_array[get_parent_index(i)]);
 		percolate_up(get_parent_index(i));
 	}
@@ -31,10 +31,10 @@ void percolate_down(int i){
 	int left = get_left_index(i);
 	int right = get_right_index(i);
 	int small_index = i;
-	if (left < heap_array.size() && (*(heap_array[left]))[0] < (*(heap_array[i]))[0]){
+	if (left < heap_array.size() && heap_array[left][0] < heap_array[i][0]){
 		small_index = left;
 	}
-	if (right < heap_array.size() && (*(heap_array[right]))[0] < (*(heap_array[small_index]))[0]){
+	if (right < heap_array.size() && heap_array[right][0] < heap_array[small_index][0]){
 		small_index = right;
 	}
 	if (small_index != i){
@@ -53,13 +53,13 @@ int calculate_hash_value(int num){
 
 void delete_min(std::list<std::array<int, 2>> ** table){
 	if (heap_array.size() != 0){
-		if ((*(heap_array[0]))[1] == 1){
-			int num = (*(heap_array[0]))[0];
+		if (heap_array[0][1] == 1){
+			int num = heap_array[0][0];
 			int hash = calculate_hash_value(num);
-			table[hash]->erase(heap_array[0]);
+			/*table[hash]->erase(heap_array[0]);*/
 		}
 		else {
-			(*(heap_array[0]))[1] = (*(heap_array[0]))[1]-1;
+			/*(*(heap_array[0]))[1] = (*(heap_array[0]))[1]-1;*/
 		}
 		heap_array[0] = heap_array.back();
 		heap_array.pop_back();
@@ -67,16 +67,16 @@ void delete_min(std::list<std::array<int, 2>> ** table){
 	}
 }
 
-void insert_heap(std::array<int, 2> * to_insert){
+void insert_heap(std::array<int, 2>::iterator to_insert){
 	heap_array.push_back(to_insert);
 	int new_index = heap_array.size()-1;
 	percolate_up(new_index);
 }
 
 void print_heap(){
-	std::vector<std::array<int, 2> *>::const_iterator it;
+	static std::vector<std::array<int, 2>::iterator>::iterator it;
 	for(it = heap_array.begin(); it != heap_array.end(); ++it){
-		std::cout << (*(*it))[0] << " ";
+		std::cout << (*it)[0] << " ";
     }
     std::cout << "\n";
 }
@@ -100,22 +100,22 @@ auto find(int num, std::list<std::array<int, 2>> ** table, int suppress_output){
 }
 
 void insert(int num, std::list<std::array<int, 2>> ** table){
-	auto [found, iterator] = find(num, table, 1);
-	std::array<int, 2> * pointer = &(*iterator);
+	auto [found, ite] = find(num, table, 1);
+	std::array<int, 2> * pointer = &(*ite);
 	if (found == 0){
 		int hash_value = calculate_hash_value(num);
-		std::array<int, 2> * my_array = (std::array<int, 2> *) malloc(sizeof(std::array<int, 2>));
-		(*my_array)[0] = num;
-		(*my_array)[1] = 1;
+		std::array<int, 2>::iterator my_array = (std::array<int, 2>::iterator) malloc(sizeof(std::array<int, 2>));
+		my_array[0] = num;
+		my_array[1] = 1;
 		std::list<std::array<int, 2>> :: iterator it = table[hash_value]->begin();
-	    table[hash_value]->insert(it, (*my_array));
+		std::array<int, 2> * test_pointer = &(*it);
+	    /*table[hash_value]->insert(it, test_pointer);*/
 	    insert_heap(my_array);
 	    std::cout << "item successfully inserted, count = 1\n"; 
 	}
 	else {
 		(*pointer)[1] = (*pointer)[1]+1;
-		std::cout << (*pointer)[0] << "\n";
-		insert_heap(pointer);
+		/*insert_heap(iterator);*/
 		std::cout << "item already present, count = " << (*pointer)[1] << "\n";
 	}
 }
@@ -163,7 +163,7 @@ int main(int argc, char** argv){
 	print_heap();
 	insert(-602, hash_table_pointer);
 	print_heap();
-	insert(-603, hash_table_pointer);
+	insert(-700, hash_table_pointer);
 	print_heap();
 	return 0;
 }
