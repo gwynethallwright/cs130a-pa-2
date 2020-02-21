@@ -81,8 +81,11 @@ void delete_min(std::list<std::array<int, 3>> ** table){
 		}
 		else {
 			(*(heap_array[0]))[1] = (*(heap_array[0]))[1]-1;
-			std::cout << "min item " << (*(heap_array[0]))[0] << " successfully deleted\n";
+			std::cout << "min item = " << (*(heap_array[0]))[0] << ", count decremented, new count = " << (*(heap_array[0]))[1] << "\n";
 		}
+	}
+	else {
+		std::cout << "min item not present since table is empty\n";
 	}
 }
 
@@ -145,7 +148,7 @@ void insert(int num, std::list<std::array<int, 3>> ** table){
 	else {
 		(*pointer)[1] = (*pointer)[1]+1;
 		/*(*pointer)[2] = insert_heap(ite);*/
-		std::cout << "item already present, count = " << (*pointer)[1] << "\n";
+		std::cout << "item successfully inserted, count = " << (*pointer)[1] << "\n";
 	}
 }
 
@@ -159,14 +162,15 @@ void delete_item(int num, std::list<std::array<int, 3>> ** table){
 			heapify((*pointer)[2]);
 
 			table[calculate_hash_value(num)]->erase(pointer);
+			std::cout << "item successfully deleted\n";
 		}
 		else {
 			(*pointer)[1] = (*pointer)[1]-1;
+			std::cout << "item count decremented, new count = " << (*pointer)[1] << "\n";
 		}
-		std::cout << "item successfully deleted\n";
 	}
 	else {
-		std::cout << "item not present in table\n";
+		std::cout << "item not present in the table\n";
 	}
 }
 
@@ -186,31 +190,24 @@ int main(int argc, char** argv){
 	static std::list<std::array<int, 3>> ** hash_table_pointer = create_hash_table();
 	std::string current;
 	std::string argument;
-	int i = 0;
-    while (i != argc){
-    	current = argv[i];
+	std::string the_input = argv[1];
+	the_input += ",";
+	std::stringstream iss(the_input);
+	iss << current;
+    while (iss){
     	if (current == "insert"){
-    		++i;
-    	    argument = argv[i];
-    	    if (i != (argc-1)){
-    	    	argument.pop_back();
-    	    }
+    	    iss >> argument;
+    	    argument.pop_back();
     		insert(std::atoi(argument.c_str()), hash_table_pointer);
     	}
     	else if (current == "lookup"){
-    		++i;
-    	    argument = argv[i];
-    	    if (i != (argc-1)){
-    	    	argument.pop_back();
-    	    }
+    	    iss >> argument;
+    	    argument.pop_back();
     		find(std::atoi(argument.c_str()), hash_table_pointer, 0);
     	}
     	else if (current == "delete"){
-    		++i;
-    	    argument = argv[i];
-    	    if (i != (argc-1)){
-    	    	argument.pop_back();
-    	    }
+    		iss >> argument;
+    	    argument.pop_back();
     		delete_item(std::atoi(argument.c_str()), hash_table_pointer);
     	}
     	else if (current == "print," || current == "print"){
@@ -219,7 +216,7 @@ int main(int argc, char** argv){
         else if (current == "deleteMin," || current == "deleteMin"){
     		delete_min(hash_table_pointer);
     	}
-    	++i;
+    	iss >> current;
     }
 	/*
 	insert(3, hash_table_pointer);
