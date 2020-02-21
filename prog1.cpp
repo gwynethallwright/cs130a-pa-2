@@ -57,10 +57,10 @@ void delete_min(std::list<std::array<int, 2>> ** table){
 		if ((*(heap_array[0]))[1] == 1){
 			int num = (*(heap_array[0]))[0];
 			int hash = calculate_hash_value(num);
-			/*table[hash]->erase(heap_array[0]);*/
+			table[hash]->erase(heap_array[0]);
 		}
 		else {
-			/*(*(heap_array[0]))[1] = (*(heap_array[0]))[1]-1;*/
+			(*(heap_array[0]))[1] = (*(heap_array[0]))[1]-1;
 		}
 		heap_array[0] = heap_array.back();
 		heap_array.pop_back();
@@ -170,6 +170,10 @@ int main(int argc, char** argv){
 	insert(3, hash_table_pointer);
 	print_heap();
 	insert(-603, hash_table_pointer);
+	print_heap();
+	delete_min(hash_table_pointer);
+	print_heap();
+	find(-603, hash_table_pointer, 0);
 	print_heap();
 	return 0;
 }
