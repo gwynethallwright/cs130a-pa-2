@@ -43,8 +43,24 @@ void percolate_down(int i){
 	}
 }
 
-void delete_min(){
+int calculate_hash_value(int num){
+	int hash_value = num % table_length;
+	if (hash_value < 0){
+		hash_value = hash_value + table_length;
+	}
+	return hash_value;
+}
+
+void delete_min(std::list<std::array<int, 2>> ** table){
 	if (heap_array.size() != 0){
+		if ((*(heap_array[0]))[1] == 1){
+			int num = (*(heap_array[0]))[0];
+			int hash = calculate_hash_value(num);
+			table[hash]->erase(heap_array[0]);
+		}
+		else {
+			(*(heap_array[0]))[1] = (*(heap_array[0]))[1]-1;
+		}
 		heap_array[0] = heap_array.back();
 		heap_array.pop_back();
 		percolate_down(0);
@@ -63,14 +79,6 @@ void print_heap(){
 		std::cout << (*(*it))[0] << " ";
     }
     std::cout << "\n";
-}
-
-int calculate_hash_value(int num){
-	int hash_value = num % table_length;
-	if (hash_value < 0){
-		hash_value = hash_value + table_length;
-	}
-	return hash_value;
 }
 
 auto find(int num, std::list<std::array<int, 2>> ** table, int suppress_output){
@@ -136,7 +144,6 @@ std::list<std::array<int, 2>> ** create_hash_table(){
 	return hash_table_pointer;
 }
 
-
 int main(int argc, char** argv){
 	static std::list<std::array<int, 2>> ** hash_table_pointer = create_hash_table();
 
@@ -158,13 +165,5 @@ int main(int argc, char** argv){
 	print_heap();
 	insert(-603, hash_table_pointer);
 	print_heap();
-	/*find(300, hash_table_pointer, 0);
-	find(300+table_length, hash_table_pointer, 0);
-	delete_item(300, hash_table_pointer);
-	find(300, hash_table_pointer, 0);
-	delete_item(300, hash_table_pointer);
-	find(300, hash_table_pointer, 0);
-	delete_item(300, hash_table_pointer);
-	find(300, hash_table_pointer, 0);*/
 	return 0;
 }
