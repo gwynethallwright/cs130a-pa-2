@@ -70,12 +70,14 @@ void delete_min(std::list<std::array<int, 2>> ** table){
 
 void insert_heap(std::list<std::array<int, 2>>::iterator to_insert){
 	heap_array.push_back(to_insert);
-	int new_index = heap_array.size()-1;
-	percolate_up(new_index);
+	if (heap_array.size() != 1){
+		int new_index = heap_array.size()-1;
+		percolate_up(new_index);
+	}
 }
 
 void print_heap(){
-	static std::vector<std::list<std::array<int, 2>>::iterator>::iterator it;
+	static std::vector< std::list<std::array<int, 2>>::iterator >::iterator it;
 	for(it = heap_array.begin(); it != heap_array.end(); ++it){
 		std::cout << (*(*it))[0] << " ";
     }
@@ -111,8 +113,8 @@ void insert(int num, std::list<std::array<int, 2>> ** table){
 		(*my_array)[1] = 1;
 		std::list<std::array<int, 2>> :: iterator it = table[hash_value]->begin();
 	    table[hash_value]->insert(it, (*my_array));
-
-	    insert_heap(it);
+		std::list<std::array<int, 2>> :: iterator it_2 = table[hash_value]->begin();
+	    insert_heap(it_2);
 	    std::cout << "item successfully inserted, count = 1\n"; 
 	}
 	else {
@@ -149,9 +151,11 @@ std::list<std::array<int, 2>> ** create_hash_table(){
 int main(int argc, char** argv){
 	static std::list<std::array<int, 2>> ** hash_table_pointer = create_hash_table();
 
-	insert(300, hash_table_pointer);
+	insert(3, hash_table_pointer);
 	print_heap();
-	insert(300, hash_table_pointer);
+	find(302, hash_table_pointer, 0);
+	print_heap();
+	insert(302, hash_table_pointer);
 	print_heap();
 	insert(-51, hash_table_pointer);
 	print_heap();
@@ -159,11 +163,11 @@ int main(int argc, char** argv){
 	print_heap();
 	insert(-54, hash_table_pointer);
 	print_heap();
-	insert(-600, hash_table_pointer);
+	insert(3, hash_table_pointer);
 	print_heap();
 	insert(-601, hash_table_pointer);
 	print_heap();
-	insert(-602, hash_table_pointer);
+	insert(3, hash_table_pointer);
 	print_heap();
 	insert(-603, hash_table_pointer);
 	print_heap();
