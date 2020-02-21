@@ -21,11 +21,12 @@ int get_right_index(int i){
 	return (2*i+2);
 }
 
-void percolate_up(int i){
+int percolate_up(int i){
 	if (i && (*(heap_array[get_parent_index(i)]))[0] > (*heap_array[i])[0]){
 		std::swap(heap_array[i], heap_array[get_parent_index(i)]);
-		percolate_up(get_parent_index(i));
+		return percolate_up(get_parent_index(i));
 	}
+	return i;
 }
 
 void percolate_down(int i){
@@ -62,18 +63,17 @@ void delete_min(std::list<std::array<int, 3>> ** table){
 		else {
 			(*(heap_array[0]))[1] = (*(heap_array[0]))[1]-1;
 		}
+		std::cout << "min item " << (*(heap_array[0]))[0] << " successfully deleted\n";
 		heap_array[0] = heap_array.back();
 		heap_array.pop_back();
 		percolate_down(0);
 	}
 }
 
-void insert_heap(std::list<std::array<int, 3>>::iterator to_insert){
+int insert_heap(std::list<std::array<int, 3>>::iterator to_insert){
 	heap_array.push_back(to_insert);
-	if (heap_array.size() != 1){
-		int new_index = heap_array.size()-1;
-		percolate_up(new_index);
-	}
+	int new_index = heap_array.size()-1;
+	return percolate_up(new_index);
 }
 
 void print_heap(){
@@ -97,7 +97,7 @@ auto find(int num, std::list<std::array<int, 3>> ** table, int suppress_output){
 		}
 	}
 	if (suppress_output == 0){
-		std::cout << "item not found.\n";
+		std::cout << "item not found\n";
 	}
 	return result {0, it};
 }
@@ -116,15 +116,14 @@ void insert(int num, std::list<std::array<int, 3>> ** table){
 	    table[hash_value]->insert(it, (*my_array));
 
 		std::list<std::array<int, 3>> :: iterator it_2 = table[hash_value]->begin();
-	    insert_heap(it_2);
 
-	    (*my_array)[2] = 5;
+	    (*my_array)[2] = insert_heap(it_2);
 
 	    std::cout << "item successfully inserted, count = 1\n"; 
 	}
 	else {
 		(*pointer)[1] = (*pointer)[1]+1;
-		insert_heap(ite);
+		/*(*pointer)[2] = insert_heap(ite);*/
 		std::cout << "item already present, count = " << (*pointer)[1] << "\n";
 	}
 }
@@ -172,7 +171,7 @@ int main(int argc, char** argv){
 	print_heap();
 	insert(-601, hash_table_pointer);
 	print_heap();
-	insert(3, hash_table_pointer);
+	insert(-601, hash_table_pointer);
 	print_heap();
 	insert(-603, hash_table_pointer);
 	print_heap();
