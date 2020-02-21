@@ -4,6 +4,8 @@
 #include <array>
 #include <iterator>
 
+static std::vector<std::array<int, 2> *> heap_array;
+
 const int table_length = 43;
 
 int get_parent_index(int i){
@@ -18,46 +20,46 @@ int get_right_index(int i){
 	return (2*i+2);
 }
 
-void percolate_up(int i, std::vector<std::array<int, 2> *> * heap_array){
-	if (i && (*((*heap_array)[get_parent_index(i)]))[0] > (*((*heap_array)[i]))[0]){
-		std::swap((*heap_array)[i], (*heap_array)[get_parent_index(i)]);
-		percolate_up(get_parent_index(i), heap_array);
+void percolate_up(int i){
+	if (i && (*(heap_array[get_parent_index(i)]))[0] > (*(heap_array[i]))[0]){
+		std::swap(heap_array[i], heap_array[get_parent_index(i)]);
+		percolate_up(get_parent_index(i));
 	}
 }
 
-void percolate_down(int i, std::vector<std::array<int, 2> *> * heap_array){
+void percolate_down(int i){
 	int left = get_left_index(i);
 	int right = get_right_index(i);
 	int small_index = i;
-	if (left < heap_array->size() && (*((*heap_array)[left]))[0] < (*((*heap_array)[i]))[0]){
+	if (left < heap_array.size() && (*(heap_array[left]))[0] < (*(heap_array[i]))[0]){
 		small_index = left;
 	}
-	if (right < heap_array->size() && (*((*heap_array)[right]))[0] < (*((*heap_array)[small_index]))[0]){
+	if (right < heap_array.size() && (*(heap_array[right]))[0] < (*(heap_array[small_index]))[0]){
 		small_index = right;
 	}
 	if (small_index != i){
-		std::swap((*heap_array)[i], (*heap_array)[small_index]);
-		percolate_down(small_index, heap_array);
+		std::swap(heap_array[i], heap_array[small_index]);
+		percolate_down(small_index);
 	}
 }
 
-void delete_min(std::vector<std::array<int, 2> *> * heap_array){
-	if (heap_array->size() != 0){
-		heap_array->front() = heap_array->back();
-		heap_array->pop_back();
-		percolate_down(0, heap_array);
+void delete_min(){
+	if (heap_array.size() != 0){
+		heap_array.front() = heap_array.back();
+		heap_array.pop_back();
+		percolate_down(0);
 	}
 }
 
-void insert_heap(std::array<int, 2> * to_insert, std::vector<std::array<int, 2> *> * heap_array){
-	heap_array->push_back(to_insert);
-	int new_index = heap_array->size()-1;
-	percolate_up(new_index, heap_array);
+void insert_heap(std::array<int, 2> * to_insert){
+	heap_array.push_back(to_insert);
+	int new_index = heap_array.size()-1;
+	percolate_up(new_index);
 }
 
-void print_heap(std::vector<std::array<int, 2> *> * heap_array){
+void print_heap(){
 	std::vector<std::array<int, 2> *>::const_iterator it;
-	for(it = heap_array->begin(); it != heap_array->end(); ++it){
+	for(it = heap_array.begin(); it != heap_array.end(); ++it){
 		std::cout << (*(*it))[0] << " ";
     }
     std::cout << "\n";
@@ -89,23 +91,27 @@ auto find(int num, std::vector<std::array<int, 2>> ** table, int suppress_output
 	return result {0, it};
 }
 
-void insert(int num, std::vector<std::array<int, 2>> ** table, std::vector<std::array<int, 2> *> * heap_array){
+void insert(int num, std::vector<std::array<int, 2>> ** table){
 	auto [found, iterator] = find(num, table, 1);
 	std::array<int, 2> * pointer = &(*iterator);
 	if (found == 0){
 		int hash_value = calculate_hash_value(num);
-		static std::array<int, 2> my_array;
-		std::array<int, 2> * my_array_pointer = &my_array;
-		my_array[0] = num;
-		my_array[1] = 1;
+		std::array<int, 2> * my_array = (std::array<int, 2> *) malloc(sizeof(std::array<int, 2>));
+		/*static std::array<int, 2> my_array;*/
+		/*std::array<int, 2> * my_array_pointer = &my_array;*/
+		(*my_array)[0] = num;
+		(*my_array)[1] = 1;
 		std::vector<std::array<int, 2>> :: iterator it = table[hash_value]->begin();
-	    table[hash_value]->insert(it, my_array);
-	    insert_heap(&my_array, heap_array);
+	    table[hash_value]->insert(it, (*my_array));
+	    insert_heap(my_array);
+	    /*std::array<int, 2> * test = (std::array<int, 2> *) malloc(sizeof(std::array<int, 2>));
+	    (*test)[0] = num;
+		heap_array.push_back(test);*/
 	    std::cout << "item successfully inserted, count = 1\n"; 
 	}
 	else {
 		(*pointer)[1] = (*pointer)[1]+1;
-		insert_heap(pointer, heap_array);
+		/*insert_heap(pointer, heap_array);*/
 		std::cout << "item already present, count = " << (*pointer)[1] << "\n";
 	}
 }
@@ -134,23 +140,41 @@ std::vector<std::array<int, 2>> ** create_hash_table(){
 	return hash_table_pointer;
 }
 
+
 int main(int argc, char** argv){
-	std::vector<std::array<int, 2>> ** hash_table_pointer = create_hash_table();
-	std::vector<std::array<int, 2> *> heap_array;
-	insert(300, hash_table_pointer, &heap_array);
-	print_heap(&heap_array);
-	insert(300, hash_table_pointer, &heap_array);
-	print_heap(&heap_array);
-	insert(300+table_length, hash_table_pointer, &heap_array);
-	print_heap(&heap_array);
-	find(300, hash_table_pointer, 0);
+	static std::vector<std::array<int, 2>> ** hash_table_pointer = create_hash_table();
+
+	insert(300, hash_table_pointer);
+	print_heap();
+	insert(300, hash_table_pointer);
+	print_heap();
+	insert(10, hash_table_pointer);
+	print_heap();
+	insert(10, hash_table_pointer);
+	print_heap();
+	insert(-51, hash_table_pointer);
+	print_heap();
+	insert(-54, hash_table_pointer);
+	print_heap();
+
+	static std::vector<std::array<int, 2> *> heap_array_test;
+	std::array<int, 2> testpointer;
+	testpointer[0] = 0;
+	heap_array_test.push_back(&testpointer);
+	std::array<int, 2> testpointer2;
+	testpointer2[0] = 1;
+	heap_array_test.push_back(&testpointer2);	
+	std::array<int, 2> testpointer3;
+	testpointer3[0] = 2;
+	heap_array_test.push_back(&testpointer3);
+	print_heap();
+	/*find(300, hash_table_pointer, 0);
 	find(300+table_length, hash_table_pointer, 0);
 	delete_item(300, hash_table_pointer);
 	find(300, hash_table_pointer, 0);
 	delete_item(300, hash_table_pointer);
 	find(300, hash_table_pointer, 0);
 	delete_item(300, hash_table_pointer);
-	find(300, hash_table_pointer, 0);
-	print_heap(&heap_array);
+	find(300, hash_table_pointer, 0);*/
 	return 0;
 }
