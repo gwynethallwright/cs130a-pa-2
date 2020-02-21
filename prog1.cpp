@@ -3,6 +3,8 @@
 #include <vector>
 #include <array>
 #include <iterator>
+#include <sstream>
+#include <string>
 
 /* vector of iterators! Each iterator points to a list entry. std::list<std::array<int, 3>>::iterator */
 static std::vector< std::list<std::array<int, 3>>::iterator > heap_array;
@@ -182,6 +184,37 @@ std::list<std::array<int, 3>> ** create_hash_table(){
 
 int main(int argc, char** argv){
 	static std::list<std::array<int, 3>> ** hash_table_pointer = create_hash_table();
+	std::string current;
+	std::string argument;
+	int i = 0;
+    while (i != argc){
+    	current = argv[i];
+    	if (current == "insert"){
+    		++i;
+    	    argument = argv[i];
+    	    argument.pop_back();
+    		insert(std::atoi(argument.c_str()), hash_table_pointer);
+    	}
+    	else if (current == "lookup"){
+    		++i;
+    	    argument = argv[i];
+    	    argument.pop_back();
+    		find(std::atoi(argument.c_str()), hash_table_pointer, 0);
+    	}
+    	else if (current == "delete"){
+    		++i;
+    	    argument = argv[i];
+    	    argument.pop_back();
+    		delete_item(std::atoi(argument.c_str()), hash_table_pointer);
+    	}
+    	else if (current == "print,"){
+    		print_heap();
+    	}
+        else if (current == "deleteMin,"){
+    		delete_min(hash_table_pointer);
+    	}
+    	++i;
+    }
 	/*
 	insert(3, hash_table_pointer);
 	print_heap();
