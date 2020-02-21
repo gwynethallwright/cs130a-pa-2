@@ -73,10 +73,10 @@ int calculate_hash_value(int num){
 	return hash_value;
 }
 
-auto find(int num, std::list<std::array<int, 2>> ** table, int suppress_output){
-	struct result {int return_value; std::list<std::array<int, 2> > :: iterator pointer;};
+auto find(int num, std::vector<std::array<int, 2>> ** table, int suppress_output){
+	struct result {int return_value; std::vector<std::array<int, 2> > :: iterator pointer;};
 	int hash_value = calculate_hash_value(num);
-	std::list<std::array<int, 2>> :: iterator it;
+	std::vector<std::array<int, 2>> :: iterator it;
 	for (it = table[hash_value]->begin(); it != table[hash_value]->end(); ++it){
 		if ((*it)[0] == num){
 			if (suppress_output == 0){
@@ -91,7 +91,7 @@ auto find(int num, std::list<std::array<int, 2>> ** table, int suppress_output){
 	return result {0, it};
 }
 
-void insert(int num, std::list<std::array<int, 2>> ** table){
+void insert(int num, std::vector<std::array<int, 2>> ** table){
 	auto [found, iterator] = find(num, table, 1);
 	std::array<int, 2> * pointer = &(*iterator);
 	if (found == 0){
@@ -99,7 +99,7 @@ void insert(int num, std::list<std::array<int, 2>> ** table){
 		std::array<int, 2> * my_array = (std::array<int, 2> *) malloc(sizeof(std::array<int, 2>));
 		(*my_array)[0] = num;
 		(*my_array)[1] = 1;
-		std::list<std::array<int, 2>> :: iterator it = table[hash_value]->begin();
+		std::vector<std::array<int, 2>> :: iterator it = table[hash_value]->begin();
 	    table[hash_value]->insert(it, (*my_array));
 	    insert_heap(my_array);
 	    std::cout << "item successfully inserted, count = 1\n"; 
@@ -112,7 +112,7 @@ void insert(int num, std::list<std::array<int, 2>> ** table){
 	}
 }
 
-void delete_item(int num, std::list<std::array<int, 2>> ** table){
+void delete_item(int num, std::vector<std::array<int, 2>> ** table){
 	auto [found, pointer] = find(num, table, 1);
 	if (found == 1){
 		if ((*pointer)[1] == 1){
@@ -124,13 +124,13 @@ void delete_item(int num, std::list<std::array<int, 2>> ** table){
 	}
 }
 
-std::list<std::array<int, 2>> ** create_hash_table(){
-	static std::list<std::array<int, 2>> * hash_table [table_length];
-	std::list<std::array<int, 2>> ** hash_table_pointer;
+std::vector<std::array<int, 2>> ** create_hash_table(){
+	static std::vector<std::array<int, 2>> * hash_table [table_length];
+	std::vector<std::array<int, 2>> ** hash_table_pointer;
 	hash_table_pointer = hash_table;
 	for (int i = 0; i < table_length; ++i){
-		static std::list<std::array<int, 2>> my_list;
-		std::list<std::array<int, 2>> * my_list_pointer = &my_list;
+		static std::vector<std::array<int, 2>> my_list;
+		std::vector<std::array<int, 2>> * my_list_pointer = &my_list;
 		hash_table[i] = my_list_pointer;
 	}
 	return hash_table_pointer;
@@ -138,11 +138,13 @@ std::list<std::array<int, 2>> ** create_hash_table(){
 
 
 int main(int argc, char** argv){
-	static std::list<std::array<int, 2>> ** hash_table_pointer = create_hash_table();
+	static std::vector<std::array<int, 2>> ** hash_table_pointer = create_hash_table();
 
 	insert(300, hash_table_pointer);
 	print_heap();
 	insert(300, hash_table_pointer);
+	print_heap();
+	insert(10, hash_table_pointer);
 	print_heap();
 	insert(-51, hash_table_pointer);
 	print_heap();
